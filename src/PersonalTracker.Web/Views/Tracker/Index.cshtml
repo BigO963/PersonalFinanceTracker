@@ -1,0 +1,36 @@
+
+@using System.Collections
+@model IEnumerable<PersonalTracker.Core.Models.DTOS.FinancialAccountDTO> 
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/TrackerIndex.css" />
+</head>
+<body>
+    <h1>Welcome @ViewData["Username"]</h1>
+    <h2>Id: @ViewData["dto"]</h2>
+    <form method="post" asp-action="Logout" asp-controller="Account">
+        <button type="submit">Logout</button>
+    </form>
+    
+    <main>
+        <div class="border border-5 w-100">sf</div>
+        @foreach (var account in Model)
+        {
+            <div>
+                <p>@account.accountName</p>
+                <p>@account.initialValue</p>
+            </div>
+        }
+    </main>
+
+</body>
+</html>

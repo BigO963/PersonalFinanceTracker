@@ -1,0 +1,10 @@
+body {
+    height: 100vh;
+}
+
+main {
+    border: solid black 1px;
+    width: 50%;
+    min-height: 80%;
+    margin: 0 auto;
+}

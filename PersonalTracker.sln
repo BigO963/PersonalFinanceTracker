@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalTracker.Tests", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalTracker.Mobile", "src\PersonalTracker.Mobile\PersonalTracker.Mobile.csproj", "{43457169-5AD8-4934-8AB0-F499985BF18B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalTracker.API", "PersonalTracker.API\PersonalTracker.API.csproj", "{0F024EF0-9604-4693-8F73-B4DC599D5B98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalTracker.API", "src\PersonalTracker.API\PersonalTracker.API.csproj", "{0F024EF0-9604-4693-8F73-B4DC599D5B98}"
 	ProjectSection(ProjectDependencies) = postProject
 		{45AAF259-E266-46BC-9E82-03570E0A1925} = {45AAF259-E266-46BC-9E82-03570E0A1925}
 	EndProjectSection
