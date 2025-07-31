@@ -1,5 +1,7 @@
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -46,12 +48,10 @@ public class TrackerController : Controller
             PropertyNameCaseInsensitive = true
         });
         
-        ViewData["dto"] = dto.UserId;
         string userId = dto.UserId;
-        _logger.LogInformation($"UserId: {userId}");
+        HttpContext.Session.SetString("UserId", userId);
         
         var AccountsPayload = await client.GetAsync($"http://localhost:5299/GetFinancialAccounts?id={userId}");
-        
 
         if (!AccountsPayload.IsSuccessStatusCode) 
             return View();
@@ -62,7 +62,6 @@ public class TrackerController : Controller
             AccountsJson,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
         );
-        _logger.LogInformation($"Accounts: {accounts}");
         
         return View(accounts);
     }
@@ -70,22 +69,27 @@ public class TrackerController : Controller
     
     public async Task<IActionResult> CreateFinanceAccount()
     {
+        ViewData["UserId"] = HttpContext.Session.GetString("UserId");
         return View();
     }
     
-    // [HttpPost]
-    // public async Task<IActionResult> CreateFinanceAccount([FromForm] FinancialAccount financialAccount)
-    // {
-    //     var client = _httpClientFactory.CreateClient();
-    //     
-    //     var result = await client.PostAsync("http://localhost:5299/Tracker/getFinancialAccounts", );
-    //     
-    //     if (!result.IsSuccessStatusCode)
-    //         
-    //     
-    //     return View();
-    // }
+    [HttpPost]
+    public async Task<IActionResult> CreateFinanceAccount([FromForm] FinancialAccountDTO financialAccount)
+    {
+        var client = _httpClientFactory.CreateClient();
+        
+        var content = new StringContent(
+            JsonSerializer.Serialize(financialAccount),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json);
+        
+        var result = await client.PostAsync("http://localhost:5299/createFinanceAccount", content);
 
+        if (!result.IsSuccessStatusCode)
+            return BadRequest("API call failed: " + result.StatusCode +  " " + result.ReasonPhrase + result.Content);
+        
+        return RedirectToAction("Index");
+    }
     
     public async Task<IActionResult> GetFinanceAccounts(string userId)
     {
