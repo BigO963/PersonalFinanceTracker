@@ -19,7 +19,7 @@ public class FinancialAccount
     
     [Required(ErrorMessage = "Initial value is required")]
     [Range(0,999999, ErrorMessage = "Initial value cannot be lower than 0")]
-    public int initialValue { get; set; }
+    public double initialValue { get; set; }
     
     [Required(ErrorMessage = "Currency type is required")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
