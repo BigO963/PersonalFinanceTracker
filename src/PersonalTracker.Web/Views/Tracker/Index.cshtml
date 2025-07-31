@@ -15,21 +15,23 @@
     <link rel="stylesheet" href="~/css/TrackerIndex.css" />
 </head>
 <body>
-    <h1>Welcome @ViewData["Username"]</h1>
-    <h2>Id: @ViewData["dto"]</h2>
     <form method="post" asp-action="Logout" asp-controller="Account">
         <button type="submit">Logout</button>
     </form>
     
     <main>
-        <div class="border border-5 w-100">sf</div>
-        @foreach (var account in Model)
-        {
-            <div>
-                <p>@account.accountName</p>
-                <p>@account.initialValue</p>
-            </div>
-        }
+        <div class="accounts border border-5 w-100 d-flex">
+            @foreach (var account in Model)
+            {
+                <div class="account border border-2 border-black w-100">
+                    <p>@account.accountName</p>
+                    <p>&euro;@account.initialValue</p>
+                </div>
+            }
+            <a asp-action="CreateFinanceAccount" class="account border border-2 border-black w-100">
+                <p>Add Account +</p>
+            </a>
+        </div>
     </main>
 
 </body>
