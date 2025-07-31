@@ -239,8 +239,8 @@ namespace PersonalTracker.API.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("initialValue")
-                        .HasColumnType("int");
+                    b.Property<double>("initialValue")
+                        .HasColumnType("float");
 
                     b.Property<string>("type")
                         .IsRequired()
