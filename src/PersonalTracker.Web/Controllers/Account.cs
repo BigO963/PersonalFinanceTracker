@@ -53,7 +53,6 @@ public class Account : Controller
             return RedirectToAction("login");
         
         var status = resoponse.StatusCode;
-        var content = await resoponse.Content.ReadAsStringAsync();
         
         if (status == HttpStatusCode.BadRequest)
             ModelState.AddModelError(string.Empty, "Invalid registration data.");
@@ -83,7 +82,7 @@ public class Account : Controller
             Encoding.UTF8,
             MediaTypeNames.Application.Json);
         
-        var response = await httpClient.PostAsync($"http://localhost:5299/login", content);
+        var response = await httpClient.PostAsync("http://localhost:5299/login", content);
         
         var raw = await response.Content.ReadAsStringAsync();
 
