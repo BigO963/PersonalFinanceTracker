@@ -2,19 +2,48 @@ body {
     height: 100vh;
 }
 
+header {
+    background-color: #1f2421;
+    height: 3rem;
+}
+
 main {
-    border: solid black 1px;
-    width: 50%;
-    min-height: 80%;
-    margin: 0 auto;
+    min-height: 90%;
+    display: flex;
+    margin: 1%;
 }
 
 .accounts {
-    height: 50px;
+    min-height: 50px;
+    display: flex;
+    flex-direction: column;
+    border: solid 1px black;
+    flex-grow: 1;
 }
 
-.account {
-    display: flex;
-    align-items:  center;
-    justify-content: center;
+.account {  
+    width: 100%;
+    border: solid 1px black;
+}
+
+.account > p {
+    margin: 0;
+}
+
+.main-info {
+    border: solid red;
+    width: 80%;
+    flex-grow: 4;
+}
+
+.collapse {
+    justify-content: end;
+}
+
+.navbar {
+    background-color: #1F2421;
+}
+
+.nav-link {
+    color: white;
 }
