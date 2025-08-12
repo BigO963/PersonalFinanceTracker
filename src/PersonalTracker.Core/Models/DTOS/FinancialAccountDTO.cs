@@ -7,17 +7,17 @@ namespace PersonalTracker.Core.Models.DTOS;
 
 public class FinancialAccountDTO
 {
-    [Required]
+    [Required(ErrorMessage = "Account name is required")]
     public string accountName { get; set; }
-    
-    [Required]
+
+    [Required(ErrorMessage = "Account type is required")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public FinancialAccount.TYPES type { get; set; }
-    
-    [Required]
+
+    [Required(ErrorMessage = "Initial value is required")] 
     public int initialValue { get; set; }
-    
-    [Required]
+
+    [Required(ErrorMessage = "Currency type is required")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public FinancialAccount.CURRENCY currencyType { get; set; }
     
