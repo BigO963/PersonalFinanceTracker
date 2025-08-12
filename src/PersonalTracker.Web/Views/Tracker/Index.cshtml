@@ -4,6 +4,8 @@
 
 @{
     Layout = null;
+    var showModal = ViewData["ShowCreateModal"] as bool? ?? false;
+    var newAccount = ViewData["NewAccount"] as PersonalTracker.Core.Models.DTOS.FinancialAccountDTO ?? new PersonalTracker.Core.Models.DTOS.FinancialAccountDTO();
 }
 
 <!DOCTYPE html>
@@ -12,9 +14,26 @@
 <head>
     <title>title</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="~/css/TrackerIndex.css" />
+    <script src="/js/FinanceIndex.js" defer></script>
 </head>
 <body>
+
+<!-- Modal -->
+<div class="modal fade @(showModal ? "show" : "")" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="@(showModal ? "false" : "true")" style="@(showModal ? "display:block;" : "")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Create a Financial Account</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("Partial/_CreateFinanceAccountPartial", newAccount)
+            </div>
+        </div>
+    </div>
+</div>
 
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -26,7 +45,7 @@
             <div class="navbar-nav">
                 <a class="nav-link active" aria-current="page" href="#">Tracker</a>
                 <a class="nav-link" href="#">Account</a>
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a>
                 <a class="nav-link" href="#">Settings</a>
             </div>
         </div>
@@ -36,26 +55,25 @@
 
 <main>
     <div class="accounts">
-        <a asp-action="CreateFinanceAccount" class="account">
-            <p>Add Account +</p>
-        </a>
+        <button type="button" class="addAccount" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add Account +
+        </button>
+        
         @foreach (var account in Model)
         {
             <div class="account">
                 <p>@account.accountName</p>
-                <p>&euro;@account.initialValue</p>
+                <p>&euro;@account.initialValue.ToString("F2")</p>
             </div>
         }
     </div>
 
     <div class="main-info d-flex flex-lg-wrap text-center">
-        
+
         <div class="w-50 h-50 border border-3">Circle diagram expenses structure</div>
         <div class="w-50 h-50 border border-3">Last records overview</div>
         <div class="w-50 h-50 border border-3">Balance Trend</div>
         <div class="w-50 h-50 border border-3">Upcoming planned payments</div>
-        
-        
     </div>
 
 </main>
