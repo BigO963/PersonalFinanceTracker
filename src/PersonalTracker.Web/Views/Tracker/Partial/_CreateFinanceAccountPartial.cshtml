@@ -1,0 +1,43 @@
+@using PersonalTracker.Core.Models
+@model PersonalTracker.Core.Models.DTOS.FinancialAccountDTO
+
+@{
+    var userId = @ViewData["UserId"] as string;
+}
+
+<div>
+    <form asp-action="CreateFinanceAccount" method="post">
+        <div class="form-content">
+            <label asp-for="accountName">Account Name</label>
+            <input class="form-control" asp-for="accountName" type="text"/>
+            <span asp-validation-for="accountName" class="text-danger"></span>
+        </div>
+        <div class="form-content">
+            <label asp-for="type">Account Type</label>
+            <select class="form-control" asp-for="type" asp-items="Html.GetEnumSelectList<FinancialAccount.TYPES>()">
+                <option>-SELECT ACCOUNT TYPE-</option>
+            </select>
+            <span asp-validation-for="type" class="text-danger"></span>
+        </div>
+        <div class="form-content">
+            <label asp-for="initialValue">Initial Value</label>
+            <input class="form-control" asp-for="initialValue" type="number" step="any"/>
+            <span asp-validation-for="initialValue" class="text-danger"></span>
+        </div>
+        <div class="form-content">
+            <label asp-for="currencyType">Currency Type</label>
+            <select class="form-control" asp-for="currencyType" asp-items="Html.GetEnumSelectList<FinancialAccount.CURRENCY>()">
+                <option>-SELECT CURRENCY TYPE-</option>
+            </select>
+            <span asp-validation-for="currencyType" class="text-danger"></span>
+        </div>
+        <input type="hidden" name="userId" value="@userId"/>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="buttons-wrapper">
+            <button type="button" class="close" data-bs-dismiss="modal">Close</button>
+            <button class="submit" type="submit">Add</button>
+        </div>
+    </form>
+</div>
