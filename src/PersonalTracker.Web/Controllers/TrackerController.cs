@@ -50,6 +50,7 @@ public class TrackerController : Controller
         
         string userId = dto.UserId;
         HttpContext.Session.SetString("UserId", userId);
+        ViewData["UserId"] = HttpContext.Session.GetString("UserId");
         
         var AccountsPayload = await client.GetAsync($"http://localhost:5299/GetFinancialAccounts?id={userId}");
 
@@ -62,20 +63,55 @@ public class TrackerController : Controller
             AccountsJson,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
         );
-        
-        return View(accounts);
-    }
 
-    
-    public async Task<IActionResult> CreateFinanceAccount()
-    {
-        ViewData["UserId"] = HttpContext.Session.GetString("UserId");
-        return View();
+        if (TempData["ValidationErrors"] != null)
+        {
+            ViewData["ShowCreateModal"] = true;
+
+            if (TempData["NewAccount"] is string dtoJson)
+            {
+                ViewData["NewAccount"] = JsonSerializer.Deserialize<FinancialAccountDTO>(dtoJson);
+            }
+
+            // Restore ModelState from TempData
+            if (TempData["ModelState"] is string modelStateJson)
+            {
+                var errors = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(modelStateJson);
+                if (errors != null)
+                {
+                    foreach (var kvp in errors)
+                    {
+                        foreach (var err in kvp.Value)
+                        {
+                            ModelState.AddModelError(kvp.Key, err);
+                        }
+                    }
+                }
+            }
+        }
+
+        return View(accounts);
     }
     
     [HttpPost]
     public async Task<IActionResult> CreateFinanceAccount([FromForm] FinancialAccountDTO financialAccount)
     {
+        if (!ModelState.IsValid)
+        {
+            var errorsDict = ModelState
+                .Where(kvp => kvp.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
+                );
+
+            TempData["ValidationErrors"] = true;
+            TempData["NewAccount"] = JsonSerializer.Serialize(financialAccount);
+            TempData["ModelState"] = JsonSerializer.Serialize(errorsDict);
+
+            return RedirectToAction("Index");
+        }
+        
         var client = _httpClientFactory.CreateClient();
         
         var content = new StringContent(
@@ -84,9 +120,13 @@ public class TrackerController : Controller
             MediaTypeNames.Application.Json);
         
         var result = await client.PostAsync("http://localhost:5299/createFinanceAccount", content);
-
+        
         if (!result.IsSuccessStatusCode)
-            return BadRequest("API call failed: " + result.StatusCode +  " " + result.ReasonPhrase + result.Content);
+        {
+            return BadRequest("API call failed: " +
+                              result.StatusCode + " " +
+                              result.ReasonPhrase + await result.Content.ReadAsStringAsync());
+        }
         
         return RedirectToAction("Index");
     }
