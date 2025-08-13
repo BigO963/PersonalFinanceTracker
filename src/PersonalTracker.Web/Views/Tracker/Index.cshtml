@@ -61,10 +61,10 @@
         
         @foreach (var account in Model)
         {
-            <div class="account">
+            <a asp-action="AccountDetails" asp-route-id="@account.account_Id" class="account">
                 <p>@account.accountName</p>
                 <p>&euro;@account.initialValue.ToString("F2")</p>
-            </div>
+            </a>
         }
     </div>
 
