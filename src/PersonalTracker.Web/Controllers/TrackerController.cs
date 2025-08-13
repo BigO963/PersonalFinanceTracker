@@ -135,4 +135,23 @@ public class TrackerController : Controller
     {
         return View();
     }
+
+    public async Task<IActionResult> AccountDetails(string id)
+    {
+        var  client = _httpClientFactory.CreateClient();
+        
+        var accountPayload = await client.GetAsync($"http://localhost:5299/getFinancialAccount?id={id}");
+        
+        if (!accountPayload.IsSuccessStatusCode) 
+            return View();
+        
+        var AccountJson = await accountPayload.Content.ReadAsStringAsync();
+        
+        var account = JsonSerializer.Deserialize<FinancialAccountDTO>(
+            AccountJson,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+        );
+        
+        return View(account);
+    }
 }
