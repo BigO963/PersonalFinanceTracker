@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Identity;
 namespace PersonalTracker.Core.Models.DTOS;
 
 public class FinancialAccountDTO
+
 {
+    public Guid account_Id { get; set; }
+    
     [Required(ErrorMessage = "Account name is required")]
     public string accountName { get; set; }
 
