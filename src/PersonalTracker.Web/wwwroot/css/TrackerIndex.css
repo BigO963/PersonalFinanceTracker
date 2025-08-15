@@ -113,3 +113,47 @@ main {
 form {
     gap: 1rem;
 }
+
+.General, .Savings, .Cash, .Current_Account, .Credit, .Debit, .Bonus, 
+.Investment, .Loan, .Mortgage, .Overdraft {
+    
+}
+
+.General {
+    background-color: #02394A;
+    color: white;
+}
+.Savings {
+    background-color: #043565;
+    color: white;
+}
+.Cash {
+    background-color: #DBB1BC;
+}
+.Current_Account {
+    background-color: #D3C4E3;
+}
+.Credit {
+    background-color: #8F95D3;
+}
+.Debit {
+    background-color: #89DAFF;
+}
+.Bonus {
+    background-color: #58504A;
+}
+.Insurance {
+    background-color: #F3E0EC;
+}
+.Investment {
+    background-color: #EAD5E6;
+}
+.Loan {
+    background-color: #F2BEFC;
+}
+.Mortgage {
+    background-color: #CA9CE1;
+}
+.Overdraft {
+    background-color: #685F74;
+}
