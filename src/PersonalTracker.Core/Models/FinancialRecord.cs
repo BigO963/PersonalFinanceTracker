@@ -6,7 +6,7 @@ namespace PersonalTracker.Core.Models;
 public class FinancialRecord
 {
     [Key]
-    public int record_id { get; set; }
+    public Guid record_id { get; set; }
 
     public string category { get; set; }
 
@@ -18,10 +18,11 @@ public class FinancialRecord
     
     public TimeOnly time { get; set; }
     
-    public Guid AccountId { get; set; }
-
-    [ForeignKey(nameof(AccountId))]
-    public FinancialAccount Account { get; set; }
+    [Required]
+    public Guid FinancialAccountId { get; set; }
+    
+    [ForeignKey(nameof(FinancialAccountId))]
+    public FinancialAccount FinancialAccount { get; set; }
     
     //TODO: add more properties like notes, labels, payee, payment type, status, places where the transaction took place and attachments
 }

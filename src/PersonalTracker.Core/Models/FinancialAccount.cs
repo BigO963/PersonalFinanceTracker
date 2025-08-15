@@ -30,6 +30,8 @@ public class FinancialAccount
 
     [ForeignKey(nameof(UserId))] 
     public IdentityUser? user { get; set; }
+    
+    public List<FinancialRecord>? financialRecords { get; set; }
 
     
     public enum TYPES

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PersonalTracker.Core.Models.DTOS;
 
@@ -15,8 +16,10 @@ public class FinancialRecordDTO
     public required DateOnly Date { get; set; }
     [Required]
     public required TimeOnly Time { get; set; }
-    [Required] 
+    
+    [Required]
     public Guid AccountId { get; set; }
+    
 
     //TODO: add more properties like notes, labels, payee, payment type, status, places where the transaction took place and attachments
 
