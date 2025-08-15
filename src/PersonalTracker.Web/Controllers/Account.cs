@@ -75,6 +75,10 @@ public class Account : Controller
     [HttpPost]
     public async Task<IActionResult> Login([FromForm] LoginViewModel model)
     {
+        
+        if (!ModelState.IsValid)
+            return View(model);
+        
         var httpClient = _httpClientFactory.CreateClient();
         
         var content = new StringContent(
@@ -88,11 +92,6 @@ public class Account : Controller
 
         var token = JsonSerializer.Deserialize<TokenDTO>(raw);
 
-        if (User.Identity.IsAuthenticated)
-        {
-            HttpContext.Session.SetString("AccessToken", token.AccessToken);
-            return RedirectToAction("Index", "Tracker");
-        }
         
         var claims = new List<Claim>
         {
