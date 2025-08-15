@@ -6,8 +6,10 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PersonalTracker.Core.Models.DTOS;
 using PersonalTracker.Web.Models;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace PersonalTracker.Web.Controllers;
 
@@ -28,6 +30,7 @@ public class TrackerController : Controller
         var client = _httpClientFactory.CreateClient();
         
         var token = HttpContext.Session.GetString("AccessToken");
+        _logger.LogInformation("Token: " + token);
         
         if (!string.IsNullOrEmpty(token))
             client.DefaultRequestHeaders.Authorization =
@@ -39,8 +42,7 @@ public class TrackerController : Controller
         
         if (!response.IsSuccessStatusCode)
         {
-            // Optionally inspect why it failed
-            return BadRequest("API call failed: " + responseContent);
+            return RedirectToAction("Login", "Account");
         }
         
         var dto = JsonSerializer.Deserialize<UserIdDTO>(responseContent, new JsonSerializerOptions
@@ -89,6 +91,24 @@ public class TrackerController : Controller
                 }
             }
         }
+        
+        List<DataPoint> dataPoints = new List<DataPoint>();
+        
+        var recordData = await client.GetAsync($"http://localhost:5299/getFinancialRecords?userId={userId}");
+
+        if (recordData.IsSuccessStatusCode)
+        {
+            var json = await recordData.Content.ReadAsStringAsync();
+            
+            var records = JsonConvert.DeserializeObject<List<FinancialRecordDTO>>(json);
+            
+            dataPoints = records
+                .GroupBy(record => record.Category)
+                .Select(g => new DataPoint(g.Key, g.Sum(r => r.Amount)))
+                .ToList();
+        }
+ 
+        ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
 
         return View(accounts);
     }
