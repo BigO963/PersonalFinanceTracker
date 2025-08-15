@@ -55,6 +55,12 @@ public class TrackerController : Controller
     {
         if (ModelState.IsValid)
         {
+            var account = await _context.Accounts
+                .FirstOrDefaultAsync(a => a.account_id == recordDTO.AccountId);
+            
+            if (account == null)
+                return NotFound("Financial account not found");
+            
             var record = new FinancialRecord
             {
                 category = recordDTO.Category,
@@ -62,25 +68,53 @@ public class TrackerController : Controller
                 currency = recordDTO.Currency,
                 date = recordDTO.Date,
                 time = recordDTO.Time,
-                AccountId = recordDTO.AccountId,
+                FinancialAccountId = recordDTO.AccountId,
             };
+
+            account.initialValue -= recordDTO.Amount;
             
             _context.Add(record);
+            _context.Update(account);
             await _context.SaveChangesAsync();
+            
+            
             return Created();
         }
         return BadRequest(ModelState);
     }
 
     [HttpGet("getFinancialRecords")]
-    public async Task<IActionResult> GetFinancialRecords(Guid id)
+    public async Task<IActionResult> GetFinancialRecords(string userId)
     {
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+        
         var records = await _context.Records
-            .Where(record => record.AccountId == id)
-            .ToArrayAsync();
+            .Where(r => r.FinancialAccount.UserId == userId)
+            .Select(r => new 
+            {
+                r.record_id,
+                r.category,
+                r.amount,
+                r.currency,
+                r.date,
+                r.time,
+                r.FinancialAccountId
+            })
+            .ToListAsync();
+
+        return Ok(records);
+
        
         return Ok(records);
     }
     
-    
+    [HttpGet("getFinancialAccount")]
+    public async Task<IActionResult> GetFinancialAccount(Guid id)
+    {
+        var account = await _context.Accounts
+            .FirstOrDefaultAsync(account => account.account_id == id);
+       
+        return Ok(account);
+    }
 }
