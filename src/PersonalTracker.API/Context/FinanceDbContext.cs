@@ -37,11 +37,5 @@ public class FinanceDbContext : IdentityDbContext<IdentityUser>
                 .IsRequired();
 
         });
-
-        modelBuilder.Entity<FinancialRecord>(record =>
-            record.HasOne(record => record.Account)
-                .WithMany()
-                .HasForeignKey(record => record.AccountId)
-                .IsRequired());
     }
 }
