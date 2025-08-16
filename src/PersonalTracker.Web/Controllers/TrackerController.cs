@@ -66,6 +66,10 @@ public class TrackerController : Controller
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
         );
 
+        double wholeBalance  = accounts.Sum(r => r.initialValue);
+        
+        ViewBag.wholeBalance = wholeBalance;
+
         if (TempData["ValidationErrors"] != null)
         {
             ViewData["ShowCreateModal"] = true;
@@ -106,9 +110,14 @@ public class TrackerController : Controller
                 .GroupBy(record => record.Category)
                 .Select(g => new DataPoint(g.Key, g.Sum(r => r.Amount)))
                 .ToList();
+            
+            double totalSpent = records.Sum(r => r.Amount);
+            
+            ViewBag.totalSpent = totalSpent;
+            ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+            
         }
  
-        ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
 
         return View(accounts);
     }
