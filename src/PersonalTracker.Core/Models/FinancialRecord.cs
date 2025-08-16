@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PersonalTracker.Core.Models;
 
@@ -22,6 +23,7 @@ public class FinancialRecord
     public Guid FinancialAccountId { get; set; }
     
     [ForeignKey(nameof(FinancialAccountId))]
+    [JsonIgnore]
     public FinancialAccount FinancialAccount { get; set; }
     
     //TODO: add more properties like notes, labels, payee, payment type, status, places where the transaction took place and attachments
