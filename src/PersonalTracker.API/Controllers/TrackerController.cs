@@ -45,6 +45,7 @@ public class TrackerController : Controller
     {
        var accounts = await _context.Accounts
             .Where(account => account.UserId == id)
+            .Include(account => account.financialRecords)
             .ToArrayAsync();
        
        return Ok(accounts);
