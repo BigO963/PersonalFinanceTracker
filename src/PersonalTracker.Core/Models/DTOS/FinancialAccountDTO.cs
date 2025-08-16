@@ -27,6 +27,6 @@ public class FinancialAccountDTO
     [Required] 
     public string UserId { get; set; }
     
-    public List<FinancialAccount>? FinancialRecords { get; set; }
+    public List<FinancialRecord>? FinancialRecords { get; set; }
 
 }
