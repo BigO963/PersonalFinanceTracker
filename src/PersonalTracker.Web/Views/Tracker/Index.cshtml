@@ -6,6 +6,8 @@
     Layout = null;
     var showModal = ViewData["ShowCreateModal"] as bool? ?? false;
     var newAccount = ViewData["NewAccount"] as PersonalTracker.Core.Models.DTOS.FinancialAccountDTO ?? new PersonalTracker.Core.Models.DTOS.FinancialAccountDTO();
+    var totalSpent = ViewBag.totalSpent;
+    var wholeBalance = ViewBag.wholeBalance;
 }
 
 <!DOCTYPE html>
@@ -23,6 +25,12 @@
          
         var chart = new CanvasJS.Chart("chartContainer", {
             animationEnabled: true,
+            subtitles: [{
+                text: "All \u20ac" + @totalSpent,
+                verticalAlign: "center",
+                dockInsidePlotArea: true,
+                fontSize: 30
+            }],
             data: [{
                 type: "doughnut",
                 startAngle: 60,
@@ -86,10 +94,28 @@
         }
     </div>
 
-    <div class="main-info d-flex flex-lg-wrap text-center">
-
-        <div class="w-50 h-50 border border-3" id="chartContainer" style="height: 370px; width: 100%;">Circle diagram expenses structure</div>
-        <div class="w-50 h-50 border border-3">Last records overview</div>
+    <div class="main-info d-flex flex-lg-wrap">
+        
+        <div class="graph-wrapper">
+            <div class="wholeBalance">
+                <p>Expenses structure</p>
+                <p><strong>&euro;@wholeBalance.ToString("F2")</strong></p>
+            </div>
+            <div id="chartContainer" style="height: 370px; width: 100%;">Circle diagram expenses structure</div>
+        </div>
+        <div class="record-wrapper w-50 h-50 border border-3">
+            @foreach (var account in Model)
+            {
+                @foreach (var record in account.FinancialRecords)
+                {
+                    <a asp-action="RecordDetails" asp-route-id="@record.record_id" class="financialRecord">
+                        <img src="@Url.Content($"~/icons/{record.category}.png")" alt="@record.category">
+                        <p>@record.category</p>
+                        <p>-&euro;@record.amount.ToString("F2")</p>
+                    </a>
+                }
+            }
+        </div>
         <div class="w-50 h-50 border border-3">Balance Trend</div>
         <div class="w-50 h-50 border border-3">Upcoming planned payments</div>
     </div>
